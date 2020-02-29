@@ -1,4 +1,6 @@
 import 'package:app_login_affiliate/const.dart';
+import 'package:app_login_affiliate/widgets/floating_button.dart';
+import 'package:app_login_affiliate/widgets/input_widget.dart';
 import 'package:app_login_affiliate/widgets/main_clipper.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +17,6 @@ class _LoginPageState extends State<LoginPage>
   Animation<double> _opacity;
   Animation<double> _position2;
   Animation<double> _opacity2;
-  Animation<double> _scale;
 
   @override
   void initState() {
@@ -46,14 +47,6 @@ class _LoginPageState extends State<LoginPage>
       ..addListener(() {
         setState(() {});
       });
-    _scale = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(0, .5, curve: Curves.bounceOut),
-      ),
-    )..addListener(() {
-        setState(() {});
-      });
     controller.forward();
     super.initState();
   }
@@ -70,23 +63,7 @@ class _LoginPageState extends State<LoginPage>
     height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      floatingActionButton: Transform.scale(
-        scale: _scale.value,
-        child: FloatingActionButton(
-          backgroundColor: CColors.red,
-          onPressed: () {
-            if (controller.value == 0.0) {
-              controller.forward();
-            } else {
-              controller.reverse();
-            }
-          },
-          child: AnimatedIcon(
-            icon: AnimatedIcons.close_menu,
-            progress: controller,
-          ),
-        ),
-      ),
+      floatingActionButton: FloatingButton(parentController: controller),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Stack(
         children: <Widget>[
@@ -98,94 +75,24 @@ class _LoginPageState extends State<LoginPage>
                 padding: EdgeInsets.only(top: height * .55 - 60),
                 child: Column(
                   children: <Widget>[
-                    Hero(
-                      tag: 'login-text',
-                      child: Material(
-                        color: Colors.transparent,
-                        child: Text(
-                          "Login To Your Account",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: CColors.white,
-                            height: 1.5,
-                          ),
-                        ),
+                    Text(
+                      "Login To Your Account",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: CColors.white,
+                        height: 1.5,
                       ),
                     ),
                     SizedBox(height: 24),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: CColors.lightblack,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      height: 50,
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Icon(
-                              Icons.person,
-                              color: CColors.white.withAlpha(75),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: double.infinity,
-                            color: CColors.black,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                hintText: "Username",
-                                hintStyle: TextStyle(
-                                  color: CColors.white.withAlpha(75),
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    InputWidget(
+                      placeholder: "Username",
+                      icon: Icons.person,
                     ),
                     SizedBox(height: 12),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: CColors.lightblack,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      height: 50,
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Icon(
-                              Icons.lock,
-                              color: CColors.white.withAlpha(75),
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: double.infinity,
-                            color: CColors.black,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                hintText: "Password",
-                                hintStyle: TextStyle(
-                                  color: CColors.white.withAlpha(75),
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    InputWidget(
+                      placeholder: "Password",
+                      icon: Icons.lock,
+                      secret: true,
                     ),
                     SizedBox(height: 12),
                     Row(
@@ -244,7 +151,6 @@ class _LoginPageState extends State<LoginPage>
               clipper: MainClipper(),
               child: Container(
                 height: height * .55,
-                padding: EdgeInsets.only(bottom: 60),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
